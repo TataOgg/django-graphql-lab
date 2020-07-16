@@ -1,0 +1,4 @@
+Django==3.0.8
+graphene-django==2.12.1
+psycopg2==2.8.5
+
