@@ -1,4 +1,6 @@
 Django==3.0.8
 graphene-django==2.12.1
+django-graphql-jwt==0.3.0
+django-graphql-auth==0.3.11
 psycopg2==2.8.5
 

@@ -1,5 +1,5 @@
 """
-WSGI config for ideas project.
+WSGI config for ideas_app project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ideas.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ideas_app.settings')
 
 application = get_wsgi_application()

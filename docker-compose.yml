@@ -5,7 +5,7 @@ services:
     build: ./app
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./app/:/usr/src/app/
+      - ./ideas_app/:/usr/src/ideas_app/
     ports:
       - 8000:8000
     env_file:
@@ -17,7 +17,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=ideas
+      - POSTGRES_USER=ideas_app
       - POSTGRES_PASSWORD=ideaspwd
       - POSTGRES_DB=ideas_dev
 volumes:
