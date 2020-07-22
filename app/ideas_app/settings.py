@@ -88,16 +88,19 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 GRAPHQL_JWT = {
-    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_VERIFY_EXPIRATION': False,
     'JWT_ALLOW_ANY_CLASSES': [
         'graphql_auth.mutations.Register',
         'graphql_auth.mutations.VerifyAccount',
         'graphql_auth.mutations.ObtainJSONWebToken'
+        "graphql_auth.mutations.ResendActivationEmail",
+        "graphql_auth.mutations.SendPasswordResetEmail",
+        "graphql_auth.mutations.PasswordReset",
     ],
 }
 GRAPHQL_AUTH = {
-    'SEND_ACTIVATION_EMAIL': False,
-    'ALLOW_LOGIN_NOT_VERIFIED': True,
+    'SEND_ACTIVATION_EMAIL': True,
+    'ALLOW_LOGIN_NOT_VERIFIED': False,
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
