@@ -38,9 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
-    'ideas_app.users',
     'graphene_django',
-    'graphql_auth'
+    'graphql_auth',
+    'ideas_app.users',
+    'ideas_app.ideas',
 ]
 
 AUTH_USER_MODEL = 'users.AppUser'
@@ -92,7 +93,7 @@ GRAPHQL_JWT = {
     'JWT_ALLOW_ANY_CLASSES': [
         'graphql_auth.mutations.Register',
         'graphql_auth.mutations.VerifyAccount',
-        'graphql_auth.mutations.ObtainJSONWebToken'
+        'graphql_auth.mutations.ObtainJSONWebToken',
         "graphql_auth.mutations.ResendActivationEmail",
         "graphql_auth.mutations.SendPasswordResetEmail",
         "graphql_auth.mutations.PasswordReset",

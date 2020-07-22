@@ -11,7 +11,7 @@ class AppUser(AbstractUser):
 
 
 class Follow(models.Model):
-    pending = models.BooleanField(default=True)
+    approved = models.BooleanField(default=False)
     user = models.ForeignKey(AppUser, related_name='user', on_delete=CASCADE)
     follower = models.ForeignKey(AppUser, related_name='follower',
                                  on_delete=CASCADE)

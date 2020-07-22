@@ -3,6 +3,9 @@ import graphene
 from graphql_auth.schema import UserQuery, MeQuery
 from graphql_auth import mutations
 
+from ideas_app.ideas.schema import IdeaQuery, IdeaMutation
+from ideas_app.users.schema import FollowQuery, FollowMutation, AppUserQuery
+
 
 class AuthMutation(graphene.ObjectType):
     register = mutations.Register.Field()
@@ -15,12 +18,15 @@ class AuthMutation(graphene.ObjectType):
     password_reset = mutations.PasswordReset.Field()
 
 
-class Query(UserQuery, MeQuery, graphene.ObjectType):
+class Query(AppUserQuery, UserQuery, MeQuery, FollowQuery,
+            IdeaQuery, graphene.ObjectType):
     pass
 
 
-class Mutation(AuthMutation, graphene.ObjectType):
+class Mutation(AuthMutation, FollowMutation, IdeaMutation,
+               graphene.ObjectType):
     pass
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
+
