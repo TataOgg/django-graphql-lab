@@ -1,6 +1,5 @@
 import graphene
-from django.core.exceptions import ObjectDoesNotExist
-from graphql import GraphQLError
+from django.db.models import Q
 from graphql_jwt.decorators import login_required
 from graphene_django.types import DjangoObjectType
 
@@ -20,24 +19,19 @@ class IdeaQuery:
 
     @login_required
     def resolve_my_ideas(self, info):
-        return Idea.objects.filter(
-            author=info.context.user
-        ).order_by('-created_on')
+        return info.context.user.idea_set.all().order_by('-created_on')
 
     @login_required
     def resolve_user_ideas(self, info, author):
-        available_ideas = [Idea.VisibilityOptions.PUBLIC]
-        try:
-            follow = Follow.objects.get(
-                user=author, follower=info.context.user)
-        except ObjectDoesNotExist:
-            follow = None
-        if follow and follow.approved:
-            available_ideas.append(Idea.VisibilityOptions.PROTECTED)
-
-        return Idea.objects.filter(
-            author=author, visibility__in=available_ideas
-        ).order_by('-created_on')
+        return Idea.objects.select_related('author').filter(
+            Q(author_id=author)
+            & (Q(visibility=Idea.VisibilityOptions.PUBLIC)
+               | (Q(visibility=Idea.VisibilityOptions.PROTECTED)
+                  & Q(author__follower__follower=info.context.user,
+                      author__follower__approved=True)
+                  )
+               )
+        ).distinct().order_by('-created_on')
 
 
 class VisibilityArg:
@@ -74,13 +68,9 @@ class ChangeVisibilityMutation(graphene.Mutation):
 
     @login_required
     def mutate(self, info, idea_id, visibility):
-        idea = Idea.objects.get(id=idea_id)
-        if idea.author == info.context.user:
-            idea.visibility = visibility
-            idea.save()
-        else:
-            raise GraphQLError("User not allowed to perform this action")
-
+        idea = Idea.objects.get(id=idea_id, author=info.context.user)
+        idea.visibility = visibility
+        idea.save()
         return ChangeVisibilityMutation(idea=idea)
 
 
@@ -92,12 +82,9 @@ class DeleteIdeaMutation(graphene.Mutation):
 
     @login_required
     def mutate(self, info, idea_id):
-        idea = Idea.objects.get(id=idea_id)
-        if idea.author == info.context.user:
-            idea.delete()
-            return DeleteIdeaMutation(success=True)
-        else:
-            raise GraphQLError("User not allowed to perform this action")
+        idea = Idea.objects.get(id=idea_id, author=info.context.user)
+        idea.delete()
+        return DeleteIdeaMutation(success=True)
 
 
 class IdeaMutation(graphene.ObjectType):
