@@ -72,11 +72,11 @@ class FollowUserMutation(graphene.Mutation):
             )
             new_follow.save()
             return FollowUserMutation(follow=new_follow)
-        else:
-            raise GraphQLError(
-                f"You already have a pending follow request "
-                f"with {user_id}"
-            )
+
+        raise GraphQLError(
+            f"You already have a pending follow request "
+            f"with {user_id}"
+        )
 
 
 class ApproveFollowerMutation(graphene.Mutation):
@@ -101,7 +101,7 @@ class ApproveFollowerMutation(graphene.Mutation):
 class UnfollowMutation(graphene.Mutation):
     class Arguments:
         user_id = graphene.String(required=True,
-                                   description="User to unfollow")
+                                  description="User to unfollow")
 
     success = graphene.Field(SuccessType)
 

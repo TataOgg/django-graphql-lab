@@ -29,4 +29,3 @@ class Mutation(AuthMutation, FollowMutation, IdeaMutation,
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
-

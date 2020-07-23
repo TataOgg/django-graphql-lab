@@ -19,9 +19,8 @@ class Idea(models.Model):
 
     def save(self, **kwargs):
         super().save(**kwargs)
-        followers = Follow.objects.select_related('follower').filter(
-            user=self.author)
+        # followers = Follow.objects.select_related('follower').filter(
+        #     user=self.author)
 
         # send notification using a django pusher mobile / web
         # to each follower.follower
-        pass
