@@ -1,6 +1,6 @@
 from django.db import models
 
-from ideas_app.users.models import AppUser
+from ideas_app.users.models import AppUser, Follow
 
 
 class Idea(models.Model):
@@ -16,3 +16,12 @@ class Idea(models.Model):
                                   choices=VisibilityOptions.choices,
                                   default=VisibilityOptions.PRIVATE)
     author = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+
+    def save(self, **kwargs):
+        super().save(**kwargs)
+        followers = Follow.objects.select_related('follower').filter(
+            user=self.author)
+
+        # send notification using a django pusher mobile / web
+        # to each follower.follower
+        pass
