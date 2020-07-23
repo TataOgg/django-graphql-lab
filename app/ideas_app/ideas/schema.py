@@ -4,7 +4,6 @@ from graphql_jwt.decorators import login_required
 from graphene_django.types import DjangoObjectType
 
 from ideas_app.ideas.models import Idea
-from ideas_app.users.models import AppUser, Follow
 from ideas_app.types import SuccessType
 
 
@@ -16,6 +15,7 @@ class IdeaType(DjangoObjectType):
 class IdeaQuery:
     my_ideas = graphene.List(IdeaType)
     user_ideas = graphene.List(IdeaType, author=graphene.String())
+    timeline = graphene.List(IdeaType)
 
     @login_required
     def resolve_my_ideas(self, info):
@@ -23,14 +23,28 @@ class IdeaQuery:
 
     @login_required
     def resolve_user_ideas(self, info, author):
+        author_query = Q(author_id=author)
+        public_ideas_query = Q(visibility=Idea.VisibilityOptions.PUBLIC)
+        protected_ideas_query = Q(visibility=Idea.VisibilityOptions.PROTECTED)
+        follower_query = Q(author__follower__follower=info.context.user,
+                           author__follower__approved=True)
         return Idea.objects.select_related('author').filter(
-            Q(author_id=author)
-            & (Q(visibility=Idea.VisibilityOptions.PUBLIC)
-               | (Q(visibility=Idea.VisibilityOptions.PROTECTED)
-                  & Q(author__follower__follower=info.context.user,
-                      author__follower__approved=True)
-                  )
-               )
+            author_query
+            & (public_ideas_query | (protected_ideas_query & follower_query))
+        ).distinct().order_by('-created_on')
+
+    @login_required
+    def resolve_timeline(self, info):
+        my_ideas_query = Q(author=info.context.user)
+        follow_user_ideas_query = Q(
+            visibility__in=[Idea.VisibilityOptions.PROTECTED,
+                            Idea.VisibilityOptions.PUBLIC]
+        )
+        follower_query = Q(author__follower__follower=info.context.user,
+                           author__follower__approved=True)
+        return Idea.objects.select_related('author').filter(
+            my_ideas_query
+            | (follower_query & follow_user_ideas_query)
         ).distinct().order_by('-created_on')
 
 
