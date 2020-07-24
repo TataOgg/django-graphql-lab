@@ -26,8 +26,8 @@ class IdeaQuery:
         author_query = Q(author_id=author)
         public_ideas_query = Q(visibility=Idea.VisibilityOptions.PUBLIC)
         protected_ideas_query = Q(visibility=Idea.VisibilityOptions.PROTECTED)
-        follower_query = Q(author__follower__follower=info.context.user,
-                           author__follower__approved=True)
+        follower_query = Q(author__user__follower=info.context.user,
+                           author__user__approved=True)
         return Idea.objects.select_related('author').filter(
             author_query
             & (public_ideas_query | (protected_ideas_query & follower_query))
@@ -40,11 +40,10 @@ class IdeaQuery:
             visibility__in=[Idea.VisibilityOptions.PROTECTED,
                             Idea.VisibilityOptions.PUBLIC]
         )
-        follower_query = Q(author__follower__follower=info.context.user,
-                           author__follower__approved=True)
+        follower_query = Q(author__user__follower=info.context.user,
+                           author__user__approved=True)
         return Idea.objects.select_related('author').filter(
-            my_ideas_query
-            | (follower_query & follow_user_ideas_query)
+            my_ideas_query | (follower_query & follow_user_ideas_query)
         ).distinct().order_by('-created_on')
 
 
