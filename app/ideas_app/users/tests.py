@@ -1,5 +1,3 @@
-import json
-
 from ideas_app.tests import BaseTestCase
 from ideas_app.users.models import Follow
 
