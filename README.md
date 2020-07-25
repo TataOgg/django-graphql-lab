@@ -31,3 +31,10 @@ You could export it to your graphQL client.
 You could use `django manage.py seed <app> --number <number of dummy data generated>` 
 for populating the database with fake data
  
+## Login
+The login is made in the tokenAuth mutation. 
+The token provided should be set in the headers of the request as:
+`Authorization: JWT <token>`
+The user must be verified in order to make requests.
+You can force the verification directly in your db 
+or copy the verification token shown in console. And user the verifyUser mutation.
