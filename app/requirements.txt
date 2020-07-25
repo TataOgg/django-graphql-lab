@@ -4,5 +4,5 @@ django-graphql-auth==0.3.11
 django-seed==0.2.2
 graphene-django==2.12.1
 psycopg2==2.8.5
-pylint=2.5.3
+pylint==2.5.3
 

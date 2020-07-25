@@ -6,6 +6,8 @@
 * Install docker-compose: https://docs.docker.com/compose/install/
 * Build images: 
 `docker-compose build`
+* Run:
+`docker-compose up`
 * Run as daemon: 
 `docker-compose up -d`
 * Alternativelly you can run only the postgres instance, acceding by the 5432 port: 
@@ -18,9 +20,13 @@ or
 
 Then run 127.0.0.1:8000 and check if it's working.
 
-The .env.dev setting is offered as a working example for the docker full run.
 
-The .env.local setting is offered as a working example for only the db running on docker.
+## Configuration files
+The configuration files are activated with the source command.
+
+* The .env.dev setting is offered as a working example for the docker full run.
+
+* The .env.local setting is offered as a working example for only the db running on docker.
 
 
 ## Requests compilation 
