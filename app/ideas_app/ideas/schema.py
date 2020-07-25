@@ -97,7 +97,7 @@ class DeleteIdeaMutation(graphene.Mutation):
     def mutate(self, info, idea_id):
         idea = Idea.objects.get(id=idea_id, author=info.context.user)
         idea.delete()
-        return DeleteIdeaMutation(success=True)
+        return DeleteIdeaMutation(status=True)
 
 
 class IdeaMutation(graphene.ObjectType):
