@@ -1,4 +1,4 @@
-Django==3.0.8
+Django==3.1.6
 django-graphql-jwt==0.3.0
 django-graphql-auth==0.3.11
 django-seed==0.2.2
